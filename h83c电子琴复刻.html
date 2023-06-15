@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #led
+        {
+            width: 20px;
+            height: 20px;
+            background-color: none;
+            border-radius: 25px;
+        }
+        .bpm_ctl
+        {
+            background-color: yellow;
+        }
+        .rhy
+        {
+            border: solid 2px black;
+        }
+        .grey
+        {
+            border:solid 2px black;
+            display: inline-block;
+        }
+        .grey > button
+        {
+            border-radius: 25px;
+            background-color: gray;
+        }
+        .sound
+        {
+            border: solid 2px black;
+            display: inline-block;
+        }
+        .sound > button
+        {
+            background-color: red;
+            border-radius: 25px;
+        }
+    </style>
+</head>
+<body>
+    <div id="led"></div>
+    
+    <div class="rhy">
+       
+        <h3>节奏选择</h3>
+        <div class="grey">
+            <button>节奏1</button>
+            <button>节奏2</button>
+            <button>节奏3</button>
+            <button>节奏4</button>
+        </div>
+        <span id="bpm">bpm:60</span>
+        <button onclick="bpm_upper()">bpm+</button>
+        <button onclick="bpm_lower()">bpm-</button>
+        <button class="bpm_ctl" onclick="play()">开始</button>
+        <button class="bpm_ctl" onclick="stop()">停止</button>
+        
+        <div class="sound">
+            <button>音色1</button>
+            <button>音色2</button>
+            <button>音色3</button>
+            <button>音色4</button>
+        </div>
+    </div>
+    <p>MIDI虚拟电脑键位表 z x c v b n m ， 对于12345678</p>
+    <button id="button">C4</button>
+    <script>
+        var rhy_looper
+        var audio = new Audio()
+        var snare = new Audio()
+        audio.src = "Basic 808 Kick.wav"
+        snare.src = "Basic 808 Snare.wav"
+        var bpm = 60
+        var interval = 60000/bpm
+        var bpm_ctl = document.getElementById("bpm")
+        var led = document.getElementById("led")
+        var button = document.getElementById("button")
+        button.addEventListener("mousedown",()=>
+        {
+            led.style = "background-color:red"
+        })
+        button.addEventListener("mouseup",()=>
+        {
+            led.style = "background-color:none"
+        })
+        var times = 0
+        function play()
+        {
+            if(times%2==0)
+            {
+                led.style = "background-color:red"
+                audio.play()
+            }
+            else
+            {
+                led.style = "background-color:none"
+            }
+            if(times%3==0)
+            {
+                snare.play()
+            }
+            times += 1
+            console.log("播放")
+            rhy_looper = setTimeout(play, interval);
+        }
+        function stop()
+        {
+            clearTimeout(rhy_looper)
+        }
+        function bpm_upper()
+        {
+            bpm += 1
+            bpm_ctl.innerText = "bpm:" + bpm
+            interval = 60000/bpm
+        }
+        function bpm_lower()
+        {
+            bpm -= 1
+            bpm_ctl.innerText = "bpm:" + bpm
+            interval = 60000/bpm
+        }
+    </script>
+</body>
+</html>
